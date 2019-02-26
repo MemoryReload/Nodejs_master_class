@@ -1,11 +1,31 @@
 const http = require( "http" );
+const https = require( "https" );
+const fs = require( "fs" );
 const url = require( "url" );
 const {
     StringDecoder
 } = require( "string_decoder" );
 const config = require( "./config" );
 
-const server = http.createServer( function ( req, res ) {
+const httpSever = http.createServer( function ( req, res ) {
+    serverLogic( req, res );
+} );
+httpSever.listen( config.httpPort, () => {
+    console.log( "HTTP server started at port: " + config.httpPort + " in " + config.name + " mode." );
+} );
+
+var httpsOptions = {
+    "key": fs.readFileSync( "./https/key.pem" ),
+    "cert": fs.readFileSync( "./https/cert.pem" ),
+}
+const httpsSever = https.createServer( httpsOptions, function ( req, res ) {
+    serverLogic( req, res );
+} );
+httpsSever.listen( config.httpsPort, () => {
+    console.log( "HTTPS server started at port: " + config.httpsPort + " in " + config.name + " mode." );
+} );
+
+const serverLogic = function ( req, res ) {
     var parsedUrl = url.parse( req.url, true );
     // console.log(parsedUrl);
     //method
@@ -45,22 +65,17 @@ const server = http.createServer( function ( req, res ) {
             res.end( data );
         } )
     } );
-} );
-server.listen( config.port, () => {
-    console.log( "Server started at port: " + config.port + " in " + config.name + "mode." );
-} );
+}
 
 //handlers
 const Handlers = {};
 Handlers.notFoundHandler = function ( data, callback ) {
     callback( 404 );
 };
-Handlers.testHandler = function ( data, callback ) {
-    callback( 200, {
-        "data": "Hello world! This is a test!"
-    } );
+Handlers.pingHandler = function ( data, callback ) {
+    callback( 200 );
 };
 //router
 const Router = {
-    "test": Handlers.testHandler,
+    "ping": Handlers.pingHandler,
 };

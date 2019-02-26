@@ -2,11 +2,13 @@ const configs = {};
 //development environgment
 configs.development = {
     "name": "development",
-    "port": 3000
+    "httpPort": 3000,
+    "httpsPort": 8000,
 };
 configs.production = {
     "name": "production",
-    "port": 8080
+    "httpPort": 80,
+    "httpsPort": 443,
 };
 //get the name from the process env
 const envName = typeof ( process.env.NODE_ENV ) == "string" ? process.env.NODE_ENV : "";
