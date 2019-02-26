@@ -6,6 +6,8 @@ const {
     StringDecoder
 } = require( "string_decoder" );
 const config = require( "./config" );
+const _data = require( "./lib/data" );
+
 
 const httpSever = http.createServer( function ( req, res ) {
     serverLogic( req, res );
@@ -17,7 +19,7 @@ httpSever.listen( config.httpPort, () => {
 var httpsOptions = {
     "key": fs.readFileSync( "./https/key.pem" ),
     "cert": fs.readFileSync( "./https/cert.pem" ),
-}
+};
 const httpsSever = https.createServer( httpsOptions, function ( req, res ) {
     serverLogic( req, res );
 } );
@@ -63,9 +65,9 @@ const serverLogic = function ( req, res ) {
             res.setHeader( "Content-Length", Buffer.byteLength( data, "utf-8" ) );
             res.writeHead( statusCode );
             res.end( data );
-        } )
+        } );
     } );
-}
+};
 
 //handlers
 const Handlers = {};
