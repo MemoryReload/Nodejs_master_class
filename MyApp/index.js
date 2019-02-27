@@ -5,8 +5,9 @@ const url = require( "url" );
 const {
     StringDecoder
 } = require( "string_decoder" );
-const config = require( "./config" );
-const _data = require( "./lib/data" );
+const config = require( "./lib/config" );
+const handlers = require( "./lib/handlers" );
+const helpers = require( "./lib/helpers" );
 
 
 const httpSever = http.createServer( function ( req, res ) {
@@ -26,6 +27,12 @@ const httpsSever = https.createServer( httpsOptions, function ( req, res ) {
 httpsSever.listen( config.httpsPort, () => {
     console.log( "HTTPS server started at port: " + config.httpsPort + " in " + config.name + " mode." );
 } );
+
+//router
+const Router = {
+    "ping": handlers.ping,
+    "users": handlers.users,
+};
 
 const serverLogic = function ( req, res ) {
     var parsedUrl = url.parse( req.url, true );
@@ -53,12 +60,12 @@ const serverLogic = function ( req, res ) {
             "headers": headers,
             "path": path,
             "query": query,
-            "data": data,
+            "payload": helpers.parseJsonObject( data ),
         };
         //get the handler from Router
-        var handler = typeof ( Router[ path ] ) == "undefined" ? Handlers.notFoundHandler : Router[ path ];
+        var handler = typeof ( Router[ path ] ) == "undefined" ? handlers.notFound : Router[ path ];
         handler( requestData, ( statusCode, payload ) => {
-            statusCode = typeof ( statusCode ) == "number" ? statusCode : 500;
+            statusCode = typeof ( statusCode ) == "number" ? statusCode : 200;
             payload = typeof ( payload ) == "object" ? payload : {};
             var data = JSON.stringify( payload );
             res.setHeader( "Content-Type", [ "application/json", "text/json" ] );
@@ -67,17 +74,4 @@ const serverLogic = function ( req, res ) {
             res.end( data );
         } );
     } );
-};
-
-//handlers
-const Handlers = {};
-Handlers.notFoundHandler = function ( data, callback ) {
-    callback( 404 );
-};
-Handlers.pingHandler = function ( data, callback ) {
-    callback( 200 );
-};
-//router
-const Router = {
-    "ping": Handlers.pingHandler,
 };
