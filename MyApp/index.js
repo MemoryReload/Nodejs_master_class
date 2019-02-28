@@ -35,17 +35,18 @@ const Router = {
 };
 
 const serverLogic = function ( req, res ) {
-    var parsedUrl = url.parse( req.url, true );
-    // console.log(parsedUrl);
     //method
     var method = req.method.toUpperCase();
     //headers
     var headers = req.headers;
+    //parse url
+    var parsedUrl = url.parse( req.url, true );
+    // console.log(parsedUrl);
     //path
     var path = parsedUrl.pathname;
     path = path.replace( /^\/+|/g, "" );
     //queries
-    var query = req.query;
+    var query = parsedUrl.query;
     //body data
     var data = "";
     const decoder = new StringDecoder( "utf-8" );
