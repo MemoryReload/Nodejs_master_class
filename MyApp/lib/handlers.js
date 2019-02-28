@@ -73,8 +73,8 @@ handlers._users.GET = function ( data, callback ) {
     _data.read("users",phone,(error, data) =>{
       if (!error) {
         //remove the password, do not show them to the user.
-        delete userObject.password;
-        callback(200, userObject);
+        delete data.password;
+        callback(200, data);
       } else {
         callback(404, {"Error":"The specified user not found!"});
       }
