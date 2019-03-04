@@ -18,4 +18,14 @@ helpers.hashStr = function ( origin ) {
         .digest( "base64" );
 };
 
+helpers.randomString = function (length){
+  var characters = "abcdefghigklmnopqrst1234567890";
+  var random = "";
+  for (var i = 0; i < length; i++) {
+    var index = Math.floor(Math.random()*length);
+    random+=characters[index];
+  }
+  return random.length>0?random:null;
+};
+
 module.exports = helpers;

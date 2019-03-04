@@ -32,6 +32,7 @@ httpsSever.listen( config.httpsPort, () => {
 const Router = {
     "ping": handlers.ping,
     "users": handlers.users,
+    "tokens": handlers.tokens,
 };
 
 const serverLogic = function ( req, res ) {
