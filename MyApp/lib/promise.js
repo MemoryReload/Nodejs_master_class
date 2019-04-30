@@ -4,11 +4,19 @@ function Promise(operation) {
   var value;
 
   var resolve = function(newValue) {
-    state = "resolved";
-    value = newValue;
-    if (deffered) {
-      handle(deffered);
-    }
+    try {
+            if (newValue && typeof newValue.then === 'function') {
+                newValue.then(resolve, reject);
+                return;
+            }
+            state = 'resolved';
+            value = newValue;
+            if (deferred) {
+                handle(deferred);
+            }
+        } catch (err) {
+            reject(err);
+        }
   };
 
   var reject = function(error) {
