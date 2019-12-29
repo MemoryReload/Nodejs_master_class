@@ -1,6 +1,6 @@
 function Promise(operation) {
   var state = "pending";
-  var deffered = null;
+  var deferred = null;
   var value;
 
   var resolve = function(newValue) {
@@ -22,14 +22,14 @@ function Promise(operation) {
   var reject = function(error) {
     state = "rejected";
     value = error;
-    if (deffered) {
-      handle(deffered);
+    if (deferred) {
+      handle(deferred);
     }
   };
 
   var handle = function(handler) {
     if (state === "pending") {
-      deffered = handler;
+      deferred = handler;
       return;
     }
 
