@@ -66,7 +66,6 @@ handlers._users.POST = function ( data, callback ) {
     }
 };
 
-//TODO: authentication
 handlers._users.GET = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
@@ -91,7 +90,6 @@ handlers._users.GET = function ( data, callback ) {
   }
 };
 
-//TODO: authentication
 handlers._users.PUT = function ( data, callback ) {
   var payload = data.payload;
   var phone = typeof ( data.payload.phone ) == "string" && data.payload.phone.trim()
@@ -138,7 +136,6 @@ handlers._users.PUT = function ( data, callback ) {
       }
 };
 
-//TODO: authentication
 handlers._users.DELETE = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
