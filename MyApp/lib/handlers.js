@@ -61,18 +61,24 @@ handlers._users.POST = function (data, callback) {
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required fields!"
     });
   }
 };
 
+<<<<<<< HEAD
 handlers._users.GET = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
+=======
+handlers._users.GET = function (data, callback) {
+  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
+  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
+>>>>>>> fix
   if (phone && token) {
-    handlers._tokens.verify(token, phone, (error) => {
-      if (!error) {
+    handlers._tokens.verify(token, phone, (isTokenValid) => {
+      if (isTokenValid) {
         _data.read("users", phone, (error, data) => {
           if (!error) {
             //remove the password, do not show them to the user.
@@ -85,20 +91,24 @@ handlers._users.GET = function ( data, callback ) {
           }
         });
       } else {
-        callback(200, {
+        callback(403, {
           "Error": "Token authentication failed!"
         });
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required fields!"
     });
   }
 };
 
+<<<<<<< HEAD
 handlers._users.PUT = function ( data, callback ) {
   var payload = data.payload;
+=======
+handlers._users.PUT = function (data, callback) {
+>>>>>>> fix
   var phone = typeof (data.payload.phone) == "string" && data.payload.phone.trim()
     .length == 11 ? data.payload.phone : false;
   var password = typeof (data.payload.password) == "string" && data.payload.password.trim()
@@ -109,8 +119,8 @@ handlers._users.PUT = function ( data, callback ) {
     .length > 0 ? data.payload.lastName : false;
   var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
   if (phone && token && (password || firstName || lastName)) {
-    handlers._tokens.verify(token, phone, (error) => {
-      if (!error) {
+    handlers._tokens.verify(token, phone, (isTokenValid) => {
+      if (isTokenValid) {
         _data.read("users", phone, (error, data) => {
           if (!error) {
             var newUser = data;
@@ -133,35 +143,64 @@ handlers._users.PUT = function ( data, callback ) {
               }
             });
           } else {
-            callback(200, {
+            callback(400, {
               "Error": "The specified user not found!"
             });
           }
         });
       } else {
-        callback(200, {
+        callback(403, {
           "Error": "Token authentication failed!"
         });
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required filed!"
     });
   }
 };
 
+<<<<<<< HEAD
 handlers._users.DELETE = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
+=======
+handlers._users.DELETE = function (data, callback) {
+  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
+  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
+>>>>>>> fix
   if (phone && token) {
-    handlers._tokens.verify(token, phone, (erro) => {
-      if (!erro) {
-        _data.read("users", data, (erro, data) => {
+    handlers._tokens.verify(token, phone, (isTokenValid) => {
+      if (isTokenValid) {
+        _data.read("users", phone, (erro, userData) => {
           if (!erro) {
             _data.delete("users", phone, (erro) => {
               if (!erro) {
-                callback(200);
+                //delete the user's checks
+                var userChecks = typeof (userData.checks) == "object" && userData.checks instanceof Array ? userData.checks : [];
+                var checksToDelete = userChecks.length;
+                if (checksToDelete>0) {
+                  var checkDeleted = 0;
+                  var deletionErrors = false;
+                  userChecks.forEach(checkId => {
+                    _data.delete("checks",checkId,function (error) {
+                      if (error) {
+                        deletionErrors = true;
+                      }
+                      checkDeleted++;
+                      if (checkDeleted == checksToDelete) {
+                        if (deletionErrors) {
+                          callback(500,{"Error":"Errors encoutered while attempting to delete user's checks"});
+                        } else {
+                          callback(200);
+                        }
+                      }
+                    });
+                  });
+                } else {
+                  callback(200);
+                }
               } else {
                 callback(500, {
                   "Error": "Could not delete the user!"
@@ -169,19 +208,19 @@ handlers._users.DELETE = function ( data, callback ) {
               }
             });
           } else {
-            callback(200, {
+            callback(400, {
               "Error": "The specified user not found!"
             });
           }
         });
       } else {
-        callback(200, {
+        callback(403, {
           "Error": "Token authentication failed!"
         });
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required fields!"
     });
   }
@@ -234,7 +273,7 @@ handlers._tokens.POST = function (data, callback) {
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required filed!"
     });
   }
@@ -254,7 +293,7 @@ handlers._tokens.GET = function (data, callback) {
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required filed!"
     });
   }
@@ -279,7 +318,7 @@ handlers._tokens.PUT = function (data, callback) {
             }
           });
         } else {
-          callback(200, {
+          callback(400, {
             "Error": "The token has expired, could not extend it!"
           });
         }
@@ -290,7 +329,7 @@ handlers._tokens.PUT = function (data, callback) {
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required filed!"
     });
   }
@@ -312,13 +351,13 @@ handlers._tokens.DELETE = function (data, callback) {
           }
         });
       } else {
-        callback(200, {
+        callback(404, {
           "Error": "The specified token not found!"
         });
       }
     });
   } else {
-    callback(200, {
+    callback(400, {
       "Error": "Missing required filed!"
     });
   }
@@ -326,7 +365,7 @@ handlers._tokens.DELETE = function (data, callback) {
 
 handlers._tokens.verify = function (tokenId, phone, callback) {
   _data.read("tokens", tokenId, (error, tokenData) => {
-    if (!error) {
+    if (!error && tokenData) {
       if (phone == tokenData.phone && tokenData.expires > Date.now()) {
         callback(true);
       } else {
@@ -369,9 +408,9 @@ handlers._checks.POST = function (data, callback) {
         // lookup the ueser data
         _data.read("users", userPhone, function (erro, userData) {
           if (!erro && userData) {
-            var userChecks = typeof(userData.checks) == "object" && userData.checks instanceof Array ? userData.checks : [];
+            var userChecks = typeof (userData.checks) == "object" && userData.checks instanceof Array ? userData.checks : [];
             //verfify
-            if(userChecks.length < config.maxChecks){
+            if (userChecks.length < config.maxChecks) {
               //create id for check
               var checkId = helpers.randomString(20);
               //create the check object, and include the user's phone
@@ -381,29 +420,35 @@ handlers._checks.POST = function (data, callback) {
                 "protocol": protocol,
                 "url": url,
                 "method": method,
-                "successCodes":successCodes,
-                "timeoutSeconds":timeoutSeconds
+                "successCodes": successCodes,
+                "timeoutSeconds": timeoutSeconds
               };
               //save the object
-              _data.create(checkObject,"checks",checkId,function(erro){
-                if(!erro){
+              _data.create(checkObject, "checks", checkId, function (erro) {
+                if (!erro) {
                   //Add checkId to the user's checks 
                   userData.checks = userChecks;
                   userData.checks.push(checkId);
                   //Update user data
-                  _data.update(userData,"users",userPhone,function(erro){
-                    if(!erro){
-                      callback(200,checkObject);
-                    }else{
-                      callback(500,{"Error":"Could not update the user with the new check"});
+                  _data.update(userData, "users", userPhone, function (erro) {
+                    if (!erro) {
+                      callback(200, checkObject);
+                    } else {
+                      callback(500, {
+                        "Error": "Could not update the user with the new check"
+                      });
                     }
                   });
-                }else{
-                  callback(500,{"Error":"Could not create the new check"});
+                } else {
+                  callback(500, {
+                    "Error": "Could not create the new check"
+                  });
                 }
               });
-            }else{
-              callback(403,{"Error":"The user alreadyahs the maximum number of checks("+config.maxChecks+")"});
+            } else {
+              callback(403, {
+                "Error": "The user alreadyahs the maximum number of checks(" + config.maxChecks + ")"
+              });
             }
           } else {
             callback(403);
@@ -416,6 +461,155 @@ handlers._checks.POST = function (data, callback) {
   } else {
     callback(400, {
       "Error": "Missing required inputs, or inputs are invalid"
+    });
+  }
+};
+
+//Required data: id
+//Optional data:none
+handlers._checks.GET = function (data, callback) {
+  var id = typeof (data.query.id) == "string" && data.query.id.length == 20 ? data.query.id : false;
+  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
+  if (id && token) {
+    _data.read("checks", id, function (erro, checkData) {
+      if (!erro && checkData) {
+        handlers._tokens.verify(token, checkData.userPhone, (isTokenValid) => {
+          if (isTokenValid) {
+            callback(200, checkData);
+          } else {
+            callback(403, {
+              "Error": "Token authentication failed!"
+            });
+          }
+        });
+      } else {
+        callback(404, {
+          "Error": "Check not found!"
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      "Error": "Missing required fields!"
+    });
+  }
+};
+
+//Required data: id
+//Optional data: protocol, url, method, successCodes, timeoutSeconds
+
+handlers._checks.PUT = function (data, callback) {
+  var id = typeof (data.payload.id) == "string" && data.payload.id.trim()
+    .length == 20 ? data.payload.id : false;
+  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
+  //valid inputs
+  var protocol = typeof (data.payload.protocol) == "string" && ["http", "https"].indexOf(data.payload.protocol) > -1 ? data.payload.protocol : false;
+  var url = typeof (data.payload.url) == "string" && data.payload.url.trim().length > 0 ? data.payload.url : false;
+  var method = typeof (data.payload.method) == "string" && ["GET", "POST", "PUT", "DELETE"].indexOf(data.payload.method) > -1 ? data.payload.method : false;
+  var successCodes = typeof (data.payload.successCodes) == "object" && data.payload.successCodes instanceof Array && data.payload.successCodes.length > 0 ? data.payload.successCodes : false;
+  var timeoutSeconds = typeof (data.payload.timeoutSeconds) == "number" && data.payload.timeoutSeconds % 1 === 0 && data.payload.timeoutSeconds >= 1 && data.payload.timeoutSeconds <= 5 ? data.payload.timeoutSeconds : false;
+  if (id) {
+    if (protocol || url || method || successCodes || timeoutSeconds) {
+      _data.read("checks",id,function (error,checkData){
+        if (!error && checkData) {
+          handlers._tokens.verify(token, checkData.userPhone, (isTokenValid) => {
+            if (isTokenValid) {
+              //Update the check where necessary
+              if (protocol) {
+                checkData.protocol = protocol;
+              }
+              if (url) {
+                checkData.url = url;
+              }
+              if (method) {
+                checkData.method = method;
+              }
+              if (successCodes) {
+                checkData.successCodes = successCodes;
+              }
+              if (timeoutSeconds) {
+                checkData.timeoutSeconds = timeoutSeconds;
+              }
+              _data.update(checkData,"checks",id,function (erorr) {
+                if (!error) {
+                  callback(200);
+                } else {
+                  callback(500,{"Error":"could not udpate the check"});
+                }
+              });
+            } else {
+              callback(403, {
+                "Error": "Token authentication failed!"
+              });
+            }
+          });
+        } else {
+          callback(400,{"Error":"check Id did not exist"});
+        }
+      });
+    }else{
+      callback(400,{"Error":"Missing fields to update"});
+    }
+  } else {
+    callback(400, {
+      "Error": "Missing required filed!"
+    });
+  }
+};
+
+//Required data: id
+//Optional data: none
+handlers._checks.DELETE = function (data,callback) {
+  var id = typeof (data.query.id) == "string" && data.query.id.length == 20 ? data.query.id : false;
+  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
+  if (id) {
+    _data.read("checks",id,function (error,checkData) {
+      if (!error && checkData) {
+        handlers._tokens.verify(token, checkData.userPhone, (isTokenValid) => {
+          if (isTokenValid) {
+                _data.delete("checks", id, (erro) => {
+                  if (!erro) {
+                    _data.read("users",checkData.userPhone,function (error, userData) {
+                      if (!error && userData) {
+                        var userChecks = typeof (userData.checks) == "object" && userData.checks instanceof Array ? userData.checks : [];
+                        var checkPosition = userChecks.indexOf(id);
+                        if (checkPosition>-1) {
+                          userChecks.splice(checkPosition,1);
+                          _data.update(userData,"users",checkData.userPhone,function (error) {
+                            if (!error) {
+                              callback(200);
+                            } else {
+                              callback(500,{"Error": "Could not remove the check on the specified user"});
+                            }
+                          });
+                        } else {
+                          callback(500,{"Error":"Could not find the check on the specified user"});
+                        }
+                      } else {
+                        callback(404, {
+                          "Error": "Could not find the user who created the check!"
+                        });
+                      }
+                    });
+                  } else {
+                    callback(500, {
+                      "Error": "Could not delete the check!"
+                    });
+                  }
+                });
+          } else {
+            callback(403, {
+              "Error": "Token authentication failed!"
+            });
+          }
+        });
+      } else {
+        callback(400,{'Error':"The specified check ID does not exist"});
+      }
+    });
+  } else {
+    callback(400, {
+      "Error": "Missing required filed!"
     });
   }
 };
