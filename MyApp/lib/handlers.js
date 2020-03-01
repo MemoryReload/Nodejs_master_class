@@ -67,16 +67,9 @@ handlers._users.POST = function (data, callback) {
   }
 };
 
-<<<<<<< HEAD
-
-handlers._users.GET = function (data, callback) {
-  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
-  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
-=======
 handlers._users.GET = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
->>>>>>> 4a4e9729fe0961df6257a47985058f9e6d65e3ae
   if (phone && token) {
     handlers._tokens.verify(token, phone, (error) => {
       if (!error) {
@@ -104,12 +97,7 @@ handlers._users.GET = function ( data, callback ) {
   }
 };
 
-<<<<<<< HEAD
-
-handlers._users.PUT = function (data, callback) {
-=======
 handlers._users.PUT = function ( data, callback ) {
->>>>>>> 4a4e9729fe0961df6257a47985058f9e6d65e3ae
   var payload = data.payload;
   var phone = typeof (data.payload.phone) == "string" && data.payload.phone.trim()
     .length == 11 ? data.payload.phone : false;
@@ -163,16 +151,9 @@ handlers._users.PUT = function ( data, callback ) {
   }
 };
 
-<<<<<<< HEAD
-
-handlers._users.DELETE = function (data, callback) {
-  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
-  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
-=======
 handlers._users.DELETE = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
->>>>>>> 4a4e9729fe0961df6257a47985058f9e6d65e3ae
   if (phone && token) {
     handlers._tokens.verify(token, phone, (erro) => {
       if (!erro) {
