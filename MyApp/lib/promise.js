@@ -79,6 +79,6 @@ function Promise(operation) {
   };
 
   operation(resolve, reject);
-};
+}
 
 module.exports = Promise;

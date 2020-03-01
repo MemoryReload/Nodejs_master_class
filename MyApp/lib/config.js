@@ -4,13 +4,15 @@ configs.development = {
     "name": "development",
     "httpPort": 3000,
     "httpsPort": 8000,
-    "shaSecret": "This is a Test!"
+    "shaSecret": "This is a Test!",
+    "maxChecks": 5
 };
 configs.production = {
     "name": "production",
     "httpPort": 80,
     "httpsPort": 443,
-    "shaSecret": "This is a Test!"
+    "shaSecret": "This is a Test!",
+    "maxChecks": 5
 };
 //get the name from the process env
 const envName = typeof ( process.env.NODE_ENV ) == "string" ? process.env.NODE_ENV : "";

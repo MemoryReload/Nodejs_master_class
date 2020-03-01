@@ -33,6 +33,7 @@ const Router = {
     "ping": handlers.ping,
     "users": handlers.users,
     "tokens": handlers.tokens,
+    "checks": handlers.checks,
 };
 
 const serverLogic = function ( req, res ) {
