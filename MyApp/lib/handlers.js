@@ -67,15 +67,9 @@ handlers._users.POST = function (data, callback) {
   }
 };
 
-<<<<<<< HEAD
 handlers._users.GET = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
-=======
-handlers._users.GET = function (data, callback) {
-  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
-  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
->>>>>>> fix
   if (phone && token) {
     handlers._tokens.verify(token, phone, (isTokenValid) => {
       if (isTokenValid) {
@@ -103,12 +97,7 @@ handlers._users.GET = function (data, callback) {
   }
 };
 
-<<<<<<< HEAD
-handlers._users.PUT = function ( data, callback ) {
-  var payload = data.payload;
-=======
 handlers._users.PUT = function (data, callback) {
->>>>>>> fix
   var phone = typeof (data.payload.phone) == "string" && data.payload.phone.trim()
     .length == 11 ? data.payload.phone : false;
   var password = typeof (data.payload.password) == "string" && data.payload.password.trim()
@@ -161,15 +150,9 @@ handlers._users.PUT = function (data, callback) {
   }
 };
 
-<<<<<<< HEAD
 handlers._users.DELETE = function ( data, callback ) {
   var phone = typeof(data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone :false;
   var token = typeof(data.headers.token) == "string" && data.headers.token.length == 20? data.headers.token:false;
-=======
-handlers._users.DELETE = function (data, callback) {
-  var phone = typeof (data.query.phone) == "string" && data.query.phone.length == 11 ? data.query.phone : false;
-  var token = typeof (data.headers.token) == "string" && data.headers.token.length == 20 ? data.headers.token : false;
->>>>>>> fix
   if (phone && token) {
     handlers._tokens.verify(token, phone, (isTokenValid) => {
       if (isTokenValid) {
