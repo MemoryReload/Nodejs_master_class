@@ -2,6 +2,7 @@ const http = require( "http" );
 const https = require( "https" );
 const fs = require( "fs" );
 const url = require( "url" );
+
 const {
     StringDecoder
 } = require( "string_decoder" );
@@ -9,6 +10,9 @@ const config = require( "./lib/config" );
 const handlers = require( "./lib/handlers" );
 const helpers = require( "./lib/helpers" );
 
+helpers.sendMessage("3156651678","⚠️这只是一个测试！",function (error) {
+    console.log(error);
+});
 
 const httpSever = http.createServer( function ( req, res ) {
     serverLogic( req, res );
